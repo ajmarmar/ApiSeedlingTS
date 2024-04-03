@@ -1,0 +1,340 @@
+openapi: 3.1.0
+info:
+  title: Server API
+  version: '1.0.0'
+  description: API with Fastify y OpenAPI Glue
+servers:
+  - url: /v1
+    description: API Version 1
+paths:
+  /session/login:
+    post:
+      tags: ['Session']
+      description: login
+      operationId: doLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      responses:
+        '200':
+          $ref: '#/components/responses/Login'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /session/logout:
+    post:
+      tags: ['Session']
+      description: Do logout
+      operationId: doLogout
+      responses:
+        '204':
+          description: Logout ok
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+ 
+  /session/statistic:
+    get:
+      description: 'Get statistic of sessions'
+      operationId: getStatistic
+      tags: ['Session']
+      security:
+          - BearerAuth: []
+      responses:
+        '200':
+          #description: dd
+          $ref: '#/components/responses/StatisticSession'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /users:
+    post:
+      tags:
+        - Users
+      description: Create a new user
+      operationId: insertUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+              password:
+                type: string
+                writeOnly: true
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+    get:
+      description: 'Get Users'
+      operationId: listUser
+      tags:
+        - Users
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: string
+          example:
+            sort: 'username,-firstName'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListUser'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      operationId: getUser
+      description: 'Get user'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+    put:
+      tags:
+        - Users
+      operationId: updateUser
+      description: 'Update user'
+      security:
+        - BearerAuth: []
+      requestBody:
+        #required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+    delete:
+      tags:
+        - Users
+      operationId: deleteUser
+      description: 'Delete user'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: OK
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+  /users/{id}/password:
+    put:
+      tags:
+        - Users
+      operationId: updatePasswordUser
+      description: 'Update password user'
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+                  writeOnly: true
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/User'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User: 
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+          readOnly: true
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        inactive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        type:
+          type: string
+          enum:
+            - API
+            - Web
+          default: API
+   
+    Error:
+      type: object
+      properties:
+        statusCode:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+  responses:
+    Login:
+      description: return token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                type: string
+
+    User:
+      description: Return User
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+
+    ListUser:
+      description: Get list of users
+      content:
+        application/json:
+          schema:
+            properties:
+              count:
+                type: number
+              rows:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+    StatisticSession:
+      description: Get statistic
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                server: 
+                  type: string
+                total:
+                  type: number
+                activeSessions:
+                  type: number
+                inactiveSessions:
+                  type: number
+
+    4XX:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    5XX:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+security:
+  - BearerAuth: []

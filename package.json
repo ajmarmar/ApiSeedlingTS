@@ -1,0 +1,44 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test_": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "lint.fix": "eslint . --ext .ts —-fix",
+    "start": "node dist/index.js",
+    "dev": "NODE_ENV=development ts-node src/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/jwt": "^8.0.0",
+    "@fastify/redis": "^6.1.1",
+    "@fastify/static": "^7.0.1",
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.11",
+    "fastify": "^4.26.2",
+    "fastify-openapi-glue": "^4.4.3",
+    "mongoose": "^8.2.2",
+    "ms-typescript": "^2.0.0",
+    "pino": "^8.19.0",
+    "pino-pretty": "^10.3.1",
+    "qs": "^6.12.0",
+    "qs-to-mongo": "^3.0.0",
+    "swagger-ui-dist": "^5.12.0",
+    "tslib": "^2.6.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/config": "^3.3.3",
+    "@types/node": "^20.11.30",
+    "@types/qs": "^6.9.14",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "eslint": "^8.57.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  }
+}

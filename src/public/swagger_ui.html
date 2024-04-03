@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Documentación de API</title>
+  <link rel="stylesheet" type="text/css" href="/swagger-ui/swagger-ui.css">
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="/swagger-ui/swagger-ui-bundle.js"></script>
+  <script>
+    window.onload = function() {
+      const ui = SwaggerUIBundle({
+        url: "/spec", // Ruta a tu archivo de especificación OpenAPI
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        deepLinking: true,
+        displayOperationId: false,
+        defaultModelsExpandDepth: 1,
+        defaultModelExpandDepth: 1,
+        docExpansion: "none",
+        filter: true,
+        maxDisplayedTags: 10,
+        showExtensions: false,
+        showCommonExtensions: false,
+        oauth2RedirectUrl: window.location.href.replace(/\/$/, '')
+      });
+    }
+  </script>
+</body>
+</html>

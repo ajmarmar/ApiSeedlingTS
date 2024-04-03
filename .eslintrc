@@ -1,0 +1,73 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "@typescript-eslint/no-explicit-any": "off",
+      "quotes": ["error", "single"],
+      "semi": ["error", "always"],
+      "curly": "error",
+      "no-empty": "error",
+      "no-console": "warn", 
+      "no-use-before-define": "warn", 
+      "arrow-spacing": "error",
+      "comma-spacing": "error",
+      "indent": ["error", 2],
+      "key-spacing": "error",
+      "keyword-spacing": "error",
+      "object-curly-spacing": ["error", "always"],
+      "object-shorthand": "error",
+      "spaced-comment": "error",
+      "space-before-blocks": "error",
+      "space-infix-ops": "error",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "default",
+          "format": [
+            "camelCase"
+          ],
+          "leadingUnderscore": "allow",
+          "trailingUnderscore": "allow"
+        },
+        {
+          "selector": "variable",
+          "format": [
+            "camelCase",
+            "UPPER_CASE"
+          ],
+          "leadingUnderscore": "allow",
+          "trailingUnderscore": "allow"
+        },
+        {
+          "selector": "typeLike",
+          "format": [
+            "PascalCase"
+          ]
+        },
+        {
+          "selector": [
+            "classProperty",
+            "objectLiteralProperty",
+            "typeProperty",
+            "import"
+          ],
+          "format": null
+        },
+        {
+          "selector": "variable",
+          "modifiers": [
+            "destructured"
+          ],
+          "format": null
+        }
+      ]
+    }
+  }

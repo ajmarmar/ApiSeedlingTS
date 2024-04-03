@@ -1,0 +1,37 @@
+#logger:
+#  level: debug
+logger:
+  development: 
+    level: debug
+    transport: 
+      target: 'pino-pretty'
+      options: 
+        translateTime: 'HH:MM:ss Z'
+        ignore: 'pid,hostname'
+  production: true
+  local: false
+
+mongo:
+  #url: mongodb://10.234.20.50:32770/test
+  #url: mongodb://192.168.1.21:27017/test
+  url: mongodb://10.234.20.77:27017/test
+  debug: false
+
+redis:
+  enable: false
+  url: redis://10.234.20.77:6379
+
+server:
+  host: localhost
+  port: 3000
+  secure:
+    secretJWT: mi secret
+    tokenExpirationTime: 2h
+    unprotected:
+      - POST:/v1/session/login
+      - POST:/v1/session/logout
+      - POST:/v1/session/register
+      - GET:/api_docs/*
+      - GET:/favicon.ico
+      - GET:/swagger-ui/*
+      - GET:/spec
