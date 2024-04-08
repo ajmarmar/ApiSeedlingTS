@@ -9,7 +9,9 @@
     "lint": "eslint . --ext .ts",
     "lint.fix": "eslint . --ext .ts —-fix",
     "start": "node dist/index.js",
-    "dev": "NODE_ENV=development ts-node src/index.ts"
+    "dev": "NODE_ENV=development ts-node src/index.ts",
+    "migrateUp": "migrate-mongo up",
+    "migrateDown": "migrate-mongo down"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +23,7 @@
     "config": "^3.3.11",
     "fastify": "^4.26.2",
     "fastify-openapi-glue": "^4.4.3",
+    "migrate-mongo": "^11.0.0",
     "mongoose": "^8.2.2",
     "ms-typescript": "^2.0.0",
     "pino": "^8.19.0",

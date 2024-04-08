@@ -17,6 +17,7 @@ export interface IConfig {
     };
     mongo: {
         url: string;
+        databaseName: string;
         debug: boolean
     };
     redis: IConfigRedis;
