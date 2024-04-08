@@ -38,6 +38,25 @@ paths:
         '5XX':
           $ref: '#/components/responses/5XX'
  
+  /session/register:
+    post:
+      description: Register a new user
+      operationId: registertUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+              password:
+                type: string
+                writeOnly: true
+      responses:
+        '200':
+          $ref: '#/components/responses/Login'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
   /session/statistic:
     get:
       description: 'Get statistic of sessions'

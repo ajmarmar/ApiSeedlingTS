@@ -165,4 +165,22 @@ export default class SessionController extends BaseCtrl {
       return reply.code(500).send({ statusCode: 500, code: 'HTTP_500', message: err.message });
     }
   }
+  
+  async registertUser(request: FastifyRequest, reply: FastifyReply) {
+    const _logger = request.log.child({ model: this.model.modelName, method: 'registertUser' });
+    const tokenExpirationTime = this.config.tokenExpirationTime || TOKEN_EXPIRATION_TIME_DEFAULT;
+
+    _logger.info('Register user');
+    try {
+      const user = await this.modelUser.create(request.body);
+      _logger.info(`User Created with id: ${user._id}`);
+      const body =  request.body as ILogin;
+      request.body = {username: user.email, password: body.password};
+      await this.doLogin(request, reply);
+
+    } catch (err: any) {
+      _logger.error(err);
+      return reply.code(500).send({ statusCode: 500, code: 'HTTP_500', message: err.message });
+    }
+  }
 }

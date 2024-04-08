@@ -26,6 +26,10 @@ export default class ControllerApi {
     this.sessionCtrl.getStatistic(req, reply);
   }
 
+  registertUser(req: FastifyRequest, reply: FastifyReply) {
+    this.sessionCtrl.registertUser(req, reply);
+  }
+
   // Users
   insertUser(req: FastifyRequest, reply: FastifyReply) {
     this.userCtrl.insert(req, reply);
