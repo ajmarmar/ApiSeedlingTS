@@ -3,9 +3,11 @@ info:
   title: Server API
   version: '1.0.0'
   description: API with Fastify y OpenAPI Glue
+
 servers:
   - url: /v1
     description: API Version 1
+
 paths:
   /session/login:
     post:
@@ -57,6 +59,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+ 
   /session/statistic:
     get:
       description: 'Get statistic of sessions'
@@ -68,6 +71,126 @@ paths:
         '200':
           #description: dd
           $ref: '#/components/responses/StatisticSession'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /roles:
+    post:
+      tags:
+        - Security
+      description: Create a new individual role
+      operationId: insertRole
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+
+    get:
+      description: 'Get Roles'
+      operationId: listRole
+      tags:
+        - Security
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          schema:
+            type: string
+          example:
+            sort: 'role,-resource'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListRole'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /roles/{id}:
+    get:
+      tags:
+        - Security
+      operationId: getRole
+      description: 'Get individual Role'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/Role'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    put:
+      tags:
+        - Security
+      operationId: updateRole
+      description: 'Update individual Role'
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/Role'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    delete:
+      tags:
+        - Security
+      operationId: deleteRole
+      description: 'Remove individual role'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: OK
         '4XX':
           $ref: '#/components/responses/4XX'
         '5XX':
@@ -96,6 +219,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
     get:
       description: 'Get Users'
       operationId: listUser
@@ -133,6 +257,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
   /users/{id}:
     get:
       tags:
@@ -154,6 +279,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
     put:
       tags:
         - Users
@@ -162,7 +288,6 @@ paths:
       security:
         - BearerAuth: []
       requestBody:
-        #required: true
         content:
           application/json:
             schema:
@@ -180,6 +305,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
     delete:
       tags:
         - Users
@@ -200,6 +326,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
   /users/{id}/password:
     put:
       tags:
@@ -231,6 +358,7 @@ paths:
           $ref: '#/components/responses/4XX'
         '5XX':
           $ref: '#/components/responses/5XX'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -254,6 +382,8 @@ components:
         firstName:
           type: string
         lastName:
+          type: string
+        role: 
           type: string
         inactive:
           type: boolean
@@ -280,6 +410,23 @@ components:
             - Web
           default: API
    
+    Role:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+          readOnly: true
+        role:
+          type: string
+        resource:
+          type: string
+        action:
+          type: string
+        attributes:
+          type: string
+          default: '*'
+
     Error:
       type: object
       properties:
@@ -324,6 +471,26 @@ components:
                 items:
                   $ref: '#/components/schemas/User'
 
+    Role:
+      description: Return a individual Role
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Role'
+
+    ListRole:
+      description: Get list of roles
+      content:
+        application/json:
+          schema:
+            properties:
+              count:
+                type: number
+              rows:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Role'
+
     StatisticSession:
       description: Get statistic
       content:
@@ -355,5 +522,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+
 security:
   - BearerAuth: []
