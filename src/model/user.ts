@@ -7,7 +7,10 @@ const userSchema = new mongoose.Schema({
   password: String,
   firstName: String,
   lastName: String,
-  inactive: { type: Boolean, default: false }
+  inactive: { type: Boolean, default: false },
+  createdBy: { type: mongoose.Types.ObjectId, ref: 'User' },
+  lastModBy: { type: mongoose.Types.ObjectId, ref: 'User' },
+  roles: [ String ]
 }, {
   timestamps: true,
 });
@@ -32,10 +35,30 @@ userSchema.methods.comparePassword = async function (candidatePassword: string) 
 };
 
 userSchema.set('toJSON', {
+  virtuals: true,
   transform: (doc, ret) => {
-    const retJson = { ...ret };
-    delete retJson.password;
-    return retJson;
+    delete ret.password;
+    ret._id = ret._id.toString(); 
+    if (ret.createdBy) {
+      ret.createdBy = ret.createdBy.toString(); 
+    }
+    if (ret.lastModBy) {
+      ret.lastModBy = ret.lastModBy.toString(); 
+    }
+  }
+});
+
+userSchema.set('toObject', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    delete ret.password;
+    ret._id = ret._id.toString(); 
+    if (ret.createdBy) {
+      ret.createdBy = ret.createdBy.toString(); 
+    }
+    if (ret.lastModBy) {
+      ret.lastModBy = ret.lastModBy.toString(); 
+    }
   }
 });
 

@@ -383,8 +383,8 @@ components:
           type: string
         lastName:
           type: string
-        role: 
-          type: string
+        roles: 
+          type: array
         inactive:
           type: boolean
         createdAt:

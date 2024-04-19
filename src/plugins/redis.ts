@@ -1,7 +1,7 @@
 import fastifyRedis from '@fastify/redis';
 import { IConfigRedis } from '../utils/interface';
 
-export default function registerPluginRedis(app: any, config: IConfigRedis) {
+export default async function registerPluginRedis(app: any, config: IConfigRedis) {
   if (config.enable) {
     const opt = { url: config.url, closeClient: true };
     app.register(fastifyRedis, opt);

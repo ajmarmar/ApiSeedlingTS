@@ -3,7 +3,7 @@ import jwt from '@fastify/jwt';
 import { IConfigSecure } from '../utils/interface';
 import Session from '../model/session';
 
-export default function registerPluginSecure(app: any, config: IConfigSecure, enableRedis: boolean) {
+export default async function registerPluginSecure(app: any, config: IConfigSecure, enableRedis: boolean) {
 
   app.register(jwt, { secret: config.secretJWT });
 

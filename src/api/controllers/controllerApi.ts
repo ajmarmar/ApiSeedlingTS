@@ -1,8 +1,8 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyRequest, FastifyReply, RouteGenericInterface } from 'fastify';
 import UserController from './user';
 import SessionController from './session';
 import RoleController from './role';
-import { IParamsGetId, IQueryList } from '../interfaces/interfaces';
+import { IParamsGetId, IQueryList, IRequestServer } from '../interfaces/interfaces';
 import { IConfigSecure } from 'src/utils/interface';
 
 export default class ControllerApi {
@@ -19,63 +19,63 @@ export default class ControllerApi {
   }
 
   // Session
-  doLogin(req: FastifyRequest, reply: FastifyReply) {
+  doLogin(req: IRequestServer, reply: FastifyReply) {
     this.sessionCtrl.doLogin(req, reply);
   }
-  doLogout(req: FastifyRequest, reply: FastifyReply) {
+  doLogout(req: IRequestServer, reply: FastifyReply) {
     this.sessionCtrl.doLogout(req, reply);
   }
-  getStatistic(req: FastifyRequest, reply: FastifyReply) {
+  getStatistic(req: IRequestServer, reply: FastifyReply) {
     this.sessionCtrl.getStatistic(req, reply);
   }
 
-  registertUser(req: FastifyRequest, reply: FastifyReply) {
+  registertUser(req: IRequestServer, reply: FastifyReply) {
     this.sessionCtrl.registertUser(req, reply);
   }
 
   // Users
-  insertUser(req: FastifyRequest, reply: FastifyReply) {
+  insertUser(req: IRequestServer, reply: FastifyReply) {
     this.userCtrl.insert(req, reply);
   }
 
-  getUser(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  getUser(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.userCtrl.get(req, reply);
   }
 
-  updateUser(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  updateUser(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.userCtrl.update(req, reply);
   }
 
-  deleteUser(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  deleteUser(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.userCtrl.delete(req, reply);
   }
 
-  listUser(req: FastifyRequest<{ Querystring: IQueryList }>, reply: FastifyReply) {
+  listUser(req: IRequestServer<{ Querystring: IQueryList }>, reply: FastifyReply) {
     this.userCtrl.list(req, reply);
   }
 
-  updatePasswordUser(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  updatePasswordUser(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.userCtrl.updatePasswordUser(req, reply);
   }
 
   // Roles
-  insertRole(req: FastifyRequest, reply: FastifyReply) {
+  insertRole(req: IRequestServer, reply: FastifyReply) {
     this.roleCtrl.insert(req, reply);
   }
 
-  getRole(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  getRole(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.roleCtrl.get(req, reply);
   }
 
-  updateRole(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  updateRole(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.roleCtrl.update(req, reply);
   }
 
-  deleteRole(req: FastifyRequest<{ Params: IParamsGetId }>, reply: FastifyReply) {
+  deleteRole(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
     this.roleCtrl.delete(req, reply);
   }
 
-  listRole(req: FastifyRequest<{ Querystring: IQueryList }>, reply: FastifyReply) {
+  listRole(req: IRequestServer<{ Querystring: IQueryList }>, reply: FastifyReply) {
     this.roleCtrl.list(req, reply);
   }
 }

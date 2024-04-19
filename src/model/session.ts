@@ -25,6 +25,20 @@ const sessionSchema = new mongoose.Schema({
   }
 });
 
+sessionSchema.set('toJSON', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret._id = ret._id.toString(); 
+  }
+});
+
+sessionSchema.set('toObject', {
+  virtuals: true,
+  transform: (doc, ret) => {
+    ret._id = ret._id.toString(); 
+  }
+});
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const Session = mongoose.model('Session', sessionSchema);
 

@@ -9,6 +9,7 @@ import ControllerApi from './api/controllers/controllerApi';
 import registerPluginSwagger from './plugins/swagger';
 import registerPluginSecure from './plugins/secure';
 import registerPluginRedis from './plugins/redis';
+import registerPluginRoles from './plugins/roles';
 
 const SPEC_PATH = path.join(__dirname, 'api', 'openapi', 'openapi.yml');
 
@@ -35,9 +36,10 @@ const start = async () => {
     mongoose.set('debug', config.get('mongo.debug') );
     app.log.info(`Connected to BBDD: ${config.get('mongo.url')}`);
    
-    registerPluginRedis(app, config.get('redis'));
-    registerPluginSwagger(app);
-    registerPluginSecure(app, config.get('server.secure'), config.get('redis.enable'));
+    await registerPluginRedis(app, config.get('redis'));
+    await registerPluginSwagger(app);
+    await registerPluginSecure(app, config.get('server.secure'), config.get('redis.enable'));
+    await registerPluginRoles(app);
 
     const openApiGlue = await loadOpenapiGlue();
     app.register(openApiGlue, options);

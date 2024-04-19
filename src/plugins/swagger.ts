@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 // import { fileURLToPath } from 'url';
 
-export default function registerPluginSwagger(app: any) {
+export default async function registerPluginSwagger(app: any) {
   const swaggerUIDirectory = path.join(__dirname, '../..', 'node_modules', 'swagger-ui-dist');
   const SPEC_PATH = path.join(__dirname, '..', 'api', 'openapi', 'openapi.yml');
 
