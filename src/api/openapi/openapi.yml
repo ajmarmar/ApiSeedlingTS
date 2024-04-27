@@ -359,6 +359,146 @@ paths:
         '5XX':
           $ref: '#/components/responses/5XX'
 
+  /files/{id}:
+    get:
+      tags:
+        - Files
+      operationId: getFile
+      description: 'Get file'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/File'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    delete:
+      tags:
+        - Files
+      operationId: deleteFile
+      description: 'Delete file'
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: OK
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /files/{id}/download:
+    get:
+      description: Download file
+      operationId: download
+      tags:
+        - Files
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: ID file
+      responses:
+        '200':
+          description: file Download success
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /files:
+    get:
+      description: 'Get files'
+      operationId: listFile
+      tags:
+        - Files
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: offset
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: number
+            default: 10
+        - name: sort
+          in: query
+          required: false
+          #explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ListFile'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /files/upload:
+    post:
+      tags:
+        - files 
+      operationId: upload
+      security:
+        - BearerAuth: []
+      description: Upload files to object
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                resource:
+                  type: string
+                idResource: 
+                    type: string
+      responses:
+        '200':
+          description: OK
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -367,6 +507,66 @@ components:
       bearerFormat: JWT
 
   schemas:
+    _auditPart:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        createdBy:
+          type: string
+          format: uuid
+          readOnly: true
+        lastModBy:
+          type: string
+          format: uuid
+          readOnly: true
+
+    File:
+      type: object
+      properties:
+        _id: 
+          type: string
+          format: uuid
+          readOnly: true
+        fileName:
+          type: string
+        name:
+          type: string
+        mimeType:
+          type: string
+        repositoryPath:
+          type: string
+        resource:
+          type: string
+        idResource:
+          type: string
+          format: uuid
+        compressed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        createdBy:
+          type: string
+          format: uuid
+          readOnly: true
+        lastModBy:
+          type: string
+          format: uuid
+          readOnly: true
+        
+
     User: 
       type: object
       properties:
@@ -394,6 +594,14 @@ components:
         updatedAt:
           type: string
           format: date-time
+          readOnly: true
+        createdBy:
+          type: string
+          format: uuid
+          readOnly: true
+        lastModBy:
+          type: string
+          format: uuid
           readOnly: true
 
     Login:
@@ -426,6 +634,22 @@ components:
         attributes:
           type: string
           default: '*'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+        createdBy:
+          type: string
+          format: uuid
+          readOnly: true
+        lastModBy:
+          type: string
+          format: uuid
+          readOnly: true
 
     Error:
       type: object
@@ -458,6 +682,13 @@ components:
           schema:
             $ref: '#/components/schemas/User'
 
+    File:
+      description: Return File
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/File'
+
     ListUser:
       description: Get list of users
       content:
@@ -470,6 +701,19 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+
+    ListFile:
+      description: Get list of users
+      content:
+        application/json:
+          schema:
+            properties:
+              count:
+                type: number
+              rows:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
 
     Role:
       description: Return a individual Role

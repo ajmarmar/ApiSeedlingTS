@@ -2,19 +2,22 @@ import { FastifyRequest, FastifyReply, RouteGenericInterface } from 'fastify';
 import UserController from './user';
 import SessionController from './session';
 import RoleController from './role';
+import FileController from './file';
 import { IParamsGetId, IQueryList, IRequestServer } from '../interfaces/interfaces';
-import { IConfigSecure } from 'src/utils/interface';
+import { IConfigRepository, IConfigSecure } from 'src/utils/interface';
 
 export default class ControllerApi {
   userCtrl: UserController;
   sessionCtrl: SessionController;
   roleCtrl: RoleController;
+  fileCtrl: FileController;
   config: IConfigSecure;
 
-  constructor(config: IConfigSecure, enableRedis: boolean) {
+  constructor(config: IConfigSecure, enableRedis: boolean, repositoryConfig: IConfigRepository) {
     this.userCtrl = new UserController();
     this.sessionCtrl = new SessionController(config, enableRedis);
     this.roleCtrl = new RoleController();
+    this.fileCtrl = new FileController(repositoryConfig);
     this.config = config;
   }
 
@@ -78,4 +81,26 @@ export default class ControllerApi {
   listRole(req: IRequestServer<{ Querystring: IQueryList }>, reply: FastifyReply) {
     this.roleCtrl.list(req, reply);
   }
+
+  // Files
+  upload(req: IRequestServer, reply: FastifyReply) {
+    this.fileCtrl.upload(req, reply);
+  }
+
+  download(req: IRequestServer, reply: FastifyReply) {
+    this.fileCtrl.download(req, reply);
+  }
+
+  getFile(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
+    this.fileCtrl.get(req, reply);
+  }
+
+  deleteFile(req: IRequestServer<{ Params: IParamsGetId }>, reply: FastifyReply) {
+    this.fileCtrl.delete(req, reply);
+  }
+
+  listFile(req: IRequestServer<{ Querystring: IQueryList }>, reply: FastifyReply) {
+    this.fileCtrl.list(req, reply);
+  }
+
 }

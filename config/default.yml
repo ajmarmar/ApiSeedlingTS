@@ -25,6 +25,19 @@ redis:
 server:
   host: localhost
   port: 3000
+  repository: 
+    path: /Users/ajmarmar/Documents/Proyectos/ApiSeedlingTS/repository
+    maxFile: 250
+    compress: true
+    noCompress:
+      - tar
+      - tar.gz
+      - zip
+      - rar
+      - 7z
+    limits:
+      fileSize: 10485760
+      files: 10
   secure:
     secretJWT: mi secret
     tokenExpirationTime: 2h

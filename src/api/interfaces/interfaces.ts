@@ -1,3 +1,4 @@
+import { MultipartFile, SavedMultipartFile } from "@fastify/multipart";
 import { AccessControl } from "accesscontrol";
 import { FastifyRequest, RouteGenericInterface } from "fastify";
 
@@ -37,9 +38,13 @@ export interface IUserRequest {
 export interface IRole {
     role: string;
     ressoure: string;
-
 }
 
 export interface IRequestServer<T extends RouteGenericInterface = any> extends FastifyRequest<T> {
     accessControl: AccessControl;
-  }
+}
+
+export interface IBodyUpload {
+    collection: { value: string};
+    idDocument: { value: string};
+}

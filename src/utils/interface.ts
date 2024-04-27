@@ -9,6 +9,17 @@ export interface IConfigRedis {
     url: string;
 }
 
+export interface IConfigRepository {
+    path: string;
+    maxFile: number;
+    compress: boolean;
+    noCompress: Array<string>;
+    limits: {
+        fileSize: number;
+        files: number;
+    }
+}
+
 export interface IConfig {
     logger: {
         development: object | boolean;
@@ -24,6 +35,7 @@ export interface IConfig {
     server: {
         host: string;
         port: number;
+        repository: IConfigRepository;
         secure: IConfigSecure;
     }
 }

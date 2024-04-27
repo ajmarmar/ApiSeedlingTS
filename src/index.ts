@@ -3,18 +3,18 @@ import fastify from 'fastify';
 import * as mongoose from 'mongoose';
 import path from 'path';
 import pino, { LoggerOptions } from 'pino';
-// import * as qs from 'qs';
-// import { fileURLToPath } from 'url';
 import ControllerApi from './api/controllers/controllerApi';
 import registerPluginSwagger from './plugins/swagger';
 import registerPluginSecure from './plugins/secure';
 import registerPluginRedis from './plugins/redis';
 import registerPluginRoles from './plugins/roles';
+import registerPluginMultiPart from './plugins/multipart';
 
 const SPEC_PATH = path.join(__dirname, 'api', 'openapi', 'openapi.yml');
 
-const optLogger:LoggerOptions = config.get(`logger.${process.env.NODE_ENV}`);
+const optLogger:LoggerOptions = JSON.parse(JSON.stringify(config.get(`logger.${process.env.NODE_ENV}`)));
 const logger = pino(optLogger);
+
 // const app = fastify({ logger, querystringParser: str => qs.parse(str) });
 const app = fastify({ logger });
 
@@ -25,7 +25,9 @@ async function loadOpenapiGlue() {
 
 const options = {
   specification: SPEC_PATH,
-  serviceHandlers: new ControllerApi(config.get('server.secure'), config.get('redis.enable')),
+  serviceHandlers: new ControllerApi(config.get('server.secure'), 
+                                     config.get('redis.enable'), 
+                                     config.get('server.repository')),
   prefix: 'v1'
 };
 
@@ -40,6 +42,7 @@ const start = async () => {
     await registerPluginSwagger(app);
     await registerPluginSecure(app, config.get('server.secure'), config.get('redis.enable'));
     await registerPluginRoles(app);
+    await registerPluginMultiPart(app, config.get('server.repository'))
 
     const openApiGlue = await loadOpenapiGlue();
     app.register(openApiGlue, options);
