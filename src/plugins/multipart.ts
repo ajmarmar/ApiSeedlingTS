@@ -81,8 +81,8 @@ export default async function registerPluginMultiPart(app: any, config: IConfigR
         name: name,
         mimeType: file.mimetype,
         repositoryPath: repoPath,
-        resource: body.collection.value,
-        idResource: body.idDocument.value,
+        resource: body.resource.value,
+        idResource: body.idResource.value,
         compressed: compress,
         createdBy: (request.user as IUserRequest).user._id
       });
