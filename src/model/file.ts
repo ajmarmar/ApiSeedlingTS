@@ -1,8 +1,5 @@
 import * as mongoose from 'mongoose';
 import User from './user';
-import config from 'config';
-import { toMs } from 'ms-typescript';
-import { TOKEN_EXPIRATION_TIME_DEFAULT } from '../utils/constants';
 
 const fileSchema = new mongoose.Schema({
   fileName: { type: String, required: true },
@@ -20,6 +17,7 @@ const fileSchema = new mongoose.Schema({
 fileSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {
+    delete ret.id;
     ret._id = ret._id.toString();
     ret.idResource = ret.idResource.toString();
   }
@@ -28,6 +26,7 @@ fileSchema.set('toJSON', {
 fileSchema.set('toObject', {
   virtuals: true,
   transform: (doc, ret) => {
+    delete ret.id;
     ret._id = ret._id.toString();
     ret.idResource = ret.idResource.toString();
   }

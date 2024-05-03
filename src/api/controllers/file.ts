@@ -3,10 +3,10 @@ import pump from 'pump';
 import fs from 'fs';
 import File from '../../model/file';
 import BaseCtrl from './base';
-import * as tar from 'tar';
 import { IBodyUpload, IParamsGetId, IRequestServer, IUserRequest } from '../interfaces/interfaces';
-import archiver from 'archiver';
 import { IConfigRepository } from '../../utils/interface';
+import { compressFileSync, descompressFileSync } from '../../utils/gz';
+
 
 export default class FileController extends BaseCtrl {
   config: IConfigRepository;
@@ -57,31 +57,13 @@ export default class FileController extends BaseCtrl {
 
       if (!this.config.compress || 
           this.config.noCompress.some( e => file.filename.toLowerCase().endsWith(e.toLocaleLowerCase()))) {
-        pump(file.file, fs.createWriteStream(outputPath));   
+        //pump(file.file, fs.createWriteStream(outputPath));   
+        fs.copyFileSync(file.filepath, outputPath);
       } else {
-        outputPath += '.tar.gz';
         name += '.tar.gz';
-        compress = true;
-
-        const output = fs.createWriteStream(outputPath);
-        const archive = archiver('tar', {
-            gzip: true,
-            zlib: { level: 9 } // Sets the compression level.
-        });
+        compress = true;        
         
-        archive.on('error', function(err) {
-          throw err;
-        });
-
-        // pipe archive data to the output file
-        archive.pipe(output);
-
-        // append files
-        archive.file(file.filepath, {name: file.filename});
-
-        // Wait for streams to complete
-        archive.finalize();
-
+        compressFileSync(file.filepath, outputPath);
       }
       _logger.info(`upload file ${file.filename}`);
 
@@ -97,7 +79,9 @@ export default class FileController extends BaseCtrl {
       });
     }
     const f = await modelFile.insertMany(arrFiles);
+    
     const list = { count: f.length, rows: f}
+    
     reply.send(list);
   }
 
@@ -134,11 +118,8 @@ export default class FileController extends BaseCtrl {
       if (obj.compressed){
         // Descomprimir el archivo
         const pathTemp = `${this.config.path}/_temp`; 
-        await tar.extract({
-          file: pathFile,
-          cwd: pathTemp,
-        });
 
+        descompressFileSync(pathFile, `${pathTemp}/${obj.fileName}`);
         file = fs.readFileSync(`${pathTemp}/${obj.fileName}`);
       }
       reply.status(200).send(file);

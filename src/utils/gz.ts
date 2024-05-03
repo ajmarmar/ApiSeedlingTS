@@ -5,7 +5,7 @@ import * as zlib from 'zlib';
 export function compressFileSync(inputPath: string, outputPath: string) {
     const input = fs.readFileSync(inputPath);
     const compressedData = zlib.gzipSync(input);
-    fs.writeFileSync(outputPath + '.gz', compressedData);
+    fs.writeFileSync(`${outputPath}.gz`, compressedData);
     console.log('Archivo comprimido correctamente.');
 }
 

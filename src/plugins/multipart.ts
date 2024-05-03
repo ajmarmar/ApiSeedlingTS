@@ -3,12 +3,11 @@ import { IConfigRepository } from '../utils/interface';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import File from '../model/file';
 import fs from 'fs';
-import { pipeline } from 'stream';
+import stream, { pipeline } from 'stream';
 import util from 'util';
-import archiver from 'archiver';
 import { IBodyUpload, IRequestServer, IUserRequest } from '../api/interfaces/interfaces';
 import { getCreateAccess } from '../utils/utils';
-import { compressFileSync, descompressFileSync } from '../utils/gz';
+import { compressFileSync } from '../utils/gz';
  
 const pump = util.promisify(pipeline);
 
@@ -66,31 +65,15 @@ export default async function registerPluginMultiPart(app: any, config: IConfigR
 
       if (!config.compress || 
           config.noCompress.some( e => file.filename.toLowerCase().endsWith(e.toLocaleLowerCase()))) {
-        await pump(file.file, fs.createWriteStream(outputPath));   
+        //await pump(await file.toBuffer(), fs.createWriteStream(outputPath));   
+        fs.copyFileSync(file.filepath, outputPath);
       } else {
-        outputPath += '.tar.gz';
-        name += '.tar.gz';
+        name += '.gz';
         compress = true;
 
-        const output = fs.createWriteStream(outputPath);
-        const archive = archiver('tar', {
-            gzip: true,
-            zlib: { level: 9 } // Sets the compression level.
-        });
-        
-        archive.on('error', function(err) {
-          throw err;
-        });
-
-        // pipe archive data to the output file
-        archive.pipe(output);
-
-        // append files
-        archive.file(file.filepath, {name: file.filename});
-
-        // Wait for streams to complete
-        archive.finalize();
+        compressFileSync(file.filepath, outputPath);
       }
+
       _logger.info(`upload file ${file.filename}`);
 
       arrFiles.push( {

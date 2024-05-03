@@ -493,7 +493,7 @@ paths:
                     type: string
       responses:
         '200':
-          description: OK
+          $ref: '#/components/responses/ListFile'
         '4XX':
           $ref: '#/components/responses/4XX'
         '5XX':

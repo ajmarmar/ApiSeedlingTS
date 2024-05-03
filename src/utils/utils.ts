@@ -1,5 +1,6 @@
 import { AccessControl } from "accesscontrol";
 import { IUserRequest } from "src/api/interfaces/interfaces";
+import fs from 'fs';
 
 export function isEmptyObject(obj: object | undefined) {
   if (obj) {
