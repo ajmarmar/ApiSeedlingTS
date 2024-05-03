@@ -45,6 +45,6 @@ export interface IRequestServer<T extends RouteGenericInterface = any> extends F
 }
 
 export interface IBodyUpload {
-    collection: { value: string};
-    idDocument: { value: string};
+    resource: { value: string};
+    idResource: { value: string};
 }
