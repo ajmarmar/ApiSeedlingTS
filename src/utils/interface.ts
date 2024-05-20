@@ -9,6 +9,11 @@ export interface IConfigRedis {
     url: string;
 }
 
+export interface IConfigMetrics {
+    enable: boolean;
+    path: string;
+}
+
 export interface IConfigRepository {
     path: string;
     maxFile: number;
@@ -37,5 +42,12 @@ export interface IConfig {
         port: number;
         repository: IConfigRepository;
         secure: IConfigSecure;
+        metrics: IConfigMetrics;
+    };
+    auth: {
+        enable: boolean;
+        secretJWT: string;
+        tokenExpirationTime: string;
+        unprotected: Array<string>;
     }
 }

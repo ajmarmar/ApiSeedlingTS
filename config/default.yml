@@ -49,3 +49,6 @@ server:
       - GET:/favicon.ico
       - GET:/swagger-ui/*
       - GET:/spec
+  metrics:
+    enable: true
+    path: /metrics

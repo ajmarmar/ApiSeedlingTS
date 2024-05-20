@@ -9,6 +9,7 @@ import registerPluginSecure from './plugins/secure';
 import registerPluginRedis from './plugins/redis';
 import registerPluginRoles from './plugins/roles';
 import registerPluginMultiPart from './plugins/multipart';
+import registerPluginMetrics from './plugins/metrics';
 
 const SPEC_PATH = path.join(__dirname, 'api', 'openapi', 'openapi.yml');
 
@@ -38,6 +39,7 @@ const start = async () => {
     mongoose.set('debug', config.get('mongo.debug') );
     app.log.info(`Connected to BBDD: ${config.get('mongo.url')}`);
    
+    await registerPluginMetrics(app, config.get('server.metrics'));
     await registerPluginRedis(app, config.get('redis'));
     await registerPluginSwagger(app);
     await registerPluginSecure(app, config.get('server.secure'), config.get('redis.enable'));

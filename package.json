@@ -24,6 +24,7 @@
     "bcryptjs": "^2.4.3",
     "config": "^3.3.11",
     "fastify": "^4.26.2",
+    "fastify-metrics": "^11.0.0",
     "fastify-openapi-glue": "^4.6.0",
     "migrate-mongo": "^11.0.0",
     "mongoose": "^8.3.2",
